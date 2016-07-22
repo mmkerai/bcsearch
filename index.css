@@ -1,0 +1,92 @@
+
+body {
+    background-color: #1F3B8F;
+}
+
+label {
+    font-family: sans-serif;
+    color:white;
+}
+
+#sidesearch {
+  position: fixed;
+  top: 4em;
+  margin: 0.5em;
+  padding-right: 0.5em;
+  width: 13em;
+  height: calc(100% - 8em);
+}
+
+#resultstable,
+#transcripttable {
+  position: fixed;
+  border-color: grey;
+  border-style: double;
+  top: 4em;
+  margin: 0.5em;
+  left: 14em;
+  width: calc(100% - 15.5em);
+  height: calc(100% - 8em);
+  overflow: auto;
+}
+
+#error {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 2em);
+  margin: 0.5em;
+  border-color: red;
+  border-style: solid;
+  height: 2em;
+}
+
+#OperatorName,
+#DepartmentName {
+  max-width: 12.5em;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+  padding: 0.3em;
+}
+
+input {
+  width: 96%;
+  margin:0.2em;
+  
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    width:8em;
+} 
+
+#GoBack{
+    left: 0em;
+    font-size: 1em;
+    position: absolute;
+    top: 0.3em;
+}
+
+#Prev{
+    font-size: 1em;
+    position: absolute;
+    right: 19.4em;
+    top: 0.3em;
+}
+
+#Next{
+    font-size: 1em;
+    position: absolute;
+    right: 11.5em;
+    top: 0.3em;
+}
+
+#BreadCrumb{
+    background-color: yellowgreen;
+    font-family: sans-serif;
+    font-size: 0.9em;
+    left: 11em;
+    position: absolute;
+    top: 0.3em;
+    width: 14.2em;
+}  

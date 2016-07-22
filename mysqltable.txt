@@ -1,0 +1,15 @@
+CREATE TABLE CHATS (
+  ChatId bigint UNSIGNED NOT NULL,
+  VisitName varchar(32),
+  VisitRef varchar(32),
+  VisitInfo varchar(32),
+  VisitPhone varchar(32),
+  ChatUrl varchar(256),
+  Started DATETIME DEFAULT NULL,
+  Answered DATETIME DEFAULT NULL,
+  Ended DATETIME DEFAULT NULL,
+  OperatorId varchar(20),
+  DepartmentId varchar(20),
+  PRIMARY KEY (ChatId)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+

@@ -1,0 +1,6 @@
+boldchat-db.farm.eurobet-italia.local   
+172.16.35.10 
+Utenza Db: root/Sik14rFl33 
+Database : boldchat-db (utf8) 
+  
+  

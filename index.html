@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Eurobet Panel</title>
+  <script src="//cdn.jsdelivr.net/g/jquery@3.1.0,momentjs@2.14.1"></script>  
+  <script type="text/javascript" src="jquery-ui-1.12.0/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="jquery-ui-1.12.0/jquery-ui.css">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.1/chosen.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.1/chosen.jquery.min.js"></script>  
+  
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.jqueryui.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.jqueryui.min.css">
+  
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.jqueryui.min.css">
+  
+  <script src="/socket.io/socket.io.js"></script>
+  
+  <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  
+  <script src="index.js"></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <h2><center><img title="eurobet" alt="logo" src="http://img.eurobet.it/adynit/images/_newsite-14/images/logo.png"></center></h2>
+  <div id="sidesearch">
+    <form name="search" action="javascript:void(0);" onsubmit="searchChats(this)"> <label for="ChatId">ChatId:</label><br> <input type="text" name="ChatId" id="ChatId"><br> <label for="VisitName">Nome Cliente</label><br> <input type="text" name="VisitName" id="VisitName"><br> <label for="VisitRef">Account Cliente</label><br> <input type="text" name="VisitRef" id="VisitRef"><br> <label for="Visitinfo">Info Cliente</label><br> <input type="text" name="VisitInfo" id="VisitInfo"><br> <label for="VisitPhone">Tel. Cliente</label><br><input type="text" name="VisitPhone" id="VisitPhone"><br><label for="FromDate">Da:</label><br> <input type="text" id="FromDate" name="FromDate"><br><label for="ToDate">A:</label><br> <input type="text" id="ToDate" name="ToDate"><br> <label for="OperatorId">Operatore:</label><br> <select name="OperatorId" id="OperatorId" data-placeholder="Nessun Filtro">
+    </select><br> <label for="DepartmentId">Dipartimento:</label><br> <select name="DepartmentId" id="DepartmentId" data-placeholder="Nessun Filtro">
+    </select><br> <br><br> <button class="ui-button ui-corner-all ui-widget" type="submit" value="Submit">Invia</button> <button class="ui-button ui-corner-all ui-widget" type="reset" value="Reset">Reset</button> </form>
+  </div>
+  <div id="resultstable">
+    <table id="chats" class="display" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>ChatId</th>
+          <th>Nome Visitatore</th>
+          <th>Account</th>
+          <th>Info</th>
+          <th>Telefono</th>
+          <th>Iniziata</th>
+          <th>Risposta</th>
+          <th>Finita</th>
+          <th>Agente</th>
+          <th>Dipartimento</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div id="transcripttable" style="display:none;">
+    <table id="transcript" class="display" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Nome</th>
+          <th>Messaggio</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  
+  <button class="ui-button ui-corner-all ui-widget" id="GoBack" style="display:none;" >Torna a Ricerca</button>  
+  <button class="ui-button ui-corner-all ui-widget" id="Prev" style="display:none;" >Precedente</button>  
+  <button class="ui-button ui-corner-all ui-widget" id="Next" style="display:none;" >Successiva</button> 
+  <div id="BreadCrumb" style="display:none;"></div>  
+  
+  <div id="error"></div> 
+  
+</body>
+
+</html>
