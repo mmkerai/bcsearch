@@ -8,8 +8,18 @@ function getOperators() {
   socket.emit('getOperators', 0);
 }
 
+function getCategories() {
+  socket.emit('getUserCategories', 0);
+}
+
+function getStatuses() {
+  socket.emit('getUserStatuses', 0);
+}
+
 function searchChats(aform) {
-  console.log("searching chats");
+  // go back to search results if new search  
+  $("#resultstable").show();
+  $("#transcripttable").hide();  
   FV = {};
   for (var i = 1; i < aform.length - 2; i++) { //exclude 2 buttons
     if (aform.elements[i].value !== "") {
@@ -42,42 +52,36 @@ function getURLParameter(name) {
 }
 /* Italian initialisation for the jQuery UI date picker plugin. */
 /* Written by Antonello Pasella (antonello.pasella@gmail.com). */
-( function( factory ) {
-	if ( typeof define === "function" && define.amd ) {
-
-		// AMD. Register as an anonymous module.
-		define( [ "../widgets/datepicker" ], factory );
-	} else {
-
-		// Browser globals
-		factory( $.datepicker );
-	}
-}( function( datepicker ) {
-    console.log("Datepicker loaded"); 
-datepicker.regional.it = {
-	closeText: "Chiudi",
-	prevText: "&#x3C;Prec",
-	nextText: "Succ&#x3E;",
-	currentText: "Oggi",
-	monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
-		"Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
-	monthNamesShort: [ "Gen","Feb","Mar","Apr","Mag","Giu",
-		"Lug","Ago","Set","Ott","Nov","Dic" ],
-	dayNames: [ "Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato" ],
-	dayNamesShort: [ "Dom","Lun","Mar","Mer","Gio","Ven","Sab" ],
-	dayNamesMin: [ "Do","Lu","Ma","Me","Gi","Ve","Sa" ],
-	weekHeader: "Sm",
-	dateFormat: "dd/mm/yy",
-	firstDay: 1,
-	isRTL: false,
-	showMonthAfterYear: false,
-	yearSuffix: "" };
-datepicker.setDefaults( datepicker.regional.it );
-
-return datepicker.regional.it;
-
-} ) );
-
+(function(factory) {
+  if (typeof define === "function" && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(["../widgets/datepicker"], factory);
+  } else {
+    // Browser globals
+    factory($.datepicker);
+  }
+}(function(datepicker) {
+  console.log("Datepicker loaded");
+  datepicker.regional.it = {
+    closeText: "Chiudi",
+    prevText: "&#x3C;Prec",
+    nextText: "Succ&#x3E;",
+    currentText: "Oggi",
+    monthNames: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
+    monthNamesShort: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],
+    dayNames: ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"],
+    dayNamesShort: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
+    dayNamesMin: ["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"],
+    weekHeader: "Sm",
+    dateFormat: "dd/mm/yy",
+    firstDay: 1,
+    isRTL: false,
+    showMonthAfterYear: false,
+    yearSuffix: ""
+  };
+  datepicker.setDefaults(datepicker.regional.it);
+  return datepicker.regional.it;
+}));
 
 function getDate(element) {
   var date;
@@ -88,14 +92,13 @@ function getDate(element) {
   }
   return date;
 }
-
-
-
 ///////////////DOCUMENT READY
 $(function() {
   //load them straightaway
   getDepartments();
   getOperators();
+  getCategories();
+  getStatuses();
   //Style input boxes
   $('input').addClass("ui-widget ui-widget-content ui-corner-all");
   //initialize chats table
@@ -104,7 +107,6 @@ $(function() {
     "scrollX": false,
     "scrollY": "100%",
     "scrollCollapse": true,
-    "fixedHeader": true,
     "columns": [{
       "data": "ChatId",
       "defaultContent": "---"
@@ -112,10 +114,10 @@ $(function() {
       "data": "VisitName",
       "defaultContent": "---"
     }, {
-      "data": "VisitRef",
+      "data": "VisitInfo",
       "defaultContent": "---"
     }, {
-      "data": "VisitInfo",
+      "data": "VisitRef",
       "defaultContent": "---"
     }, {
       "data": "VisitPhone",
@@ -136,6 +138,12 @@ $(function() {
       "data": "DepartmentId",
       "defaultContent": "---"
     }, {
+      "data": "UserCategoryId",
+      "defaultContent": "---"
+    }, {
+      "data": "UserStatusId",
+      "defaultContent": "---"
+    }, {
       "data": "ChatUrl",
       "defaultContent": "---"
     }]
@@ -146,7 +154,6 @@ $(function() {
     "scrollX": false,
     "scrollY": "100%",
     "scrollCollapse": true,
-    "fixedHeader": true,
     "columns": [{
       "data": "Created",
       "defaultContent": "---"
@@ -163,30 +170,31 @@ $(function() {
   $("#transcript_wrapper").append($("#Prev"));
   $("#transcript_wrapper").append($("#Next"));
   $("#transcript_wrapper").append($("#BreadCrumb"));
-  
-  
   //datepickers
   var from = $("#FromDate").datepicker({
-    defaultDate: "+1w",
-    changeMonth: true,
-    numberOfMonths: 1
-  }).on("change", function() {
-    to.datepicker("option", "minDate", getDate(this));
-  }),
-  to = $("#ToDate").datepicker({
-    defaultDate: "+1w",
-    changeMonth: true,
-    numberOfMonths: 1
-  }).on("change", function() {
-    from.datepicker("option", "maxDate", getDate(this));
-  });  
-  
-  
+      defaultDate: "-6m",
+      changeMonth: true,
+      numberOfMonths: 1
+    }).on("change", function() {
+      to.datepicker("option", "minDate", getDate(this));
+    }),
+    to = $("#ToDate").datepicker({
+      //defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1
+    }).on("change", function() {
+      from.datepicker("option", "maxDate", getDate(this));
+    });
+   //set it to today. 
+   $("#ToDate").datepicker("setDate", new Date()); 
+    
+       
+    
   //Socket responses
-  
   socket.on('errorResponse', function(data) {
     $("#error").text(data);
   });
+  
   socket.on('getDepartmentsResponse', function(data) {
     //Save it globaly first
     window.global_Departments = data;
@@ -196,10 +204,12 @@ $(function() {
       //console.log("Department id: " + i + " Name: " + data[i]);
     }
     $('#DepartmentId').html(output.join(''));
+    $("#DepartmentId").find('option[value="3141800975542067529"]').prop('selected', true);
     $("#DepartmentId").chosen({
       allow_single_deselect: true,
       width: '100%'
     });
+    //select PROD department by default
     //$("#message1").html("No of Departments: " + Object.keys(data).length);
   });
   socket.on('getOperatorsResponse', function(data) {
@@ -217,6 +227,41 @@ $(function() {
     });
     //$("#message2").text("No of Operators: " + Object.keys(data).length);
   });
+  
+  socket.on('getUserCategoriesResponse', function(data) {
+    //Save it globaly first
+    window.global_Categories = data;
+    var output = ['<option value="" selected></option>'];
+    for (var i in data) {
+      output.push('<option value="' + i + '">' + data[i] + '</option>');
+      //console.log("Category id: " + i + " Name: " + data[i]);
+    }
+    $('#UserCategoryId').html(output.join(''));
+    $("#UserCategoryId").chosen({
+      allow_single_deselect: true,
+      width: '100%'
+    });
+    //$("#message1").html("No of Departments: " + Object.keys(data).length);
+  });
+  
+  socket.on('getUserStatusesResponse', function(data) {
+    //Save it globaly first
+    window.global_Statuses = data;
+    var output = ['<option value="" selected></option>'];
+    for (var i in data) {
+      output.push('<option value="' + i + '">' + data[i] + '</option>');
+      //console.log("Status id: " + i + " Name: " + data[i]);
+    }
+    $('#UserStatusId').html(output.join(''));
+    $("#UserStatusId").chosen({
+      allow_single_deselect: true,
+      width: '100%'
+    });
+    //$("#message1").html("No of Departments: " + Object.keys(data).length);
+  });
+  
+  
+  
   socket.on('searchChatsResponse', function(Chats) {
     console.log("finished searching chats");
     //properly initialize the global array
@@ -230,9 +275,14 @@ $(function() {
       Chats[i].ChatId = "<a href='#' onclick='getTranscript(\"" + Chats[i].ChatId + "\");'>" + Chats[i].ChatId + "</a>";
       Chats[i].Started = moment(Chats[i].Started).format("DD-MM-YY HH:mm");
       Chats[i].Answered = moment(Chats[i].Answered).format("DD-MM-YY HH:mm");
+            //detect if a chat is lost
+      if (Chats[i].Answered=="01-01-70 00:00") Chats[i].Answered="PERSA";
+      
       Chats[i].Ended = moment(Chats[i].Ended).format("DD-MM-YY HH:mm");
       Chats[i].OperatorId = window.global_Operators[Chats[i].OperatorId];
       Chats[i].DepartmentId = window.global_Departments[Chats[i].DepartmentId];
+      Chats[i].UserCategoryId = window.global_Categories[Chats[i].UserCategoryId];
+      Chats[i].UserStatusId = window.global_Statuses[Chats[i].UserStatusId];
     }
     var datatable = $('#chats').dataTable().api(); //get reference
     datatable.clear();

@@ -19,12 +19,18 @@
 		<div class='btn btn-primary' onClick='getOperators()'>Get Operators</div>
 	</div>
 	<div class="col-xs-3">
-		<div class='btn btn-primary' onClick='getChats()'>Get Chats by date</div>
+		<div class='btn btn-primary' onClick='getUserCategories()'>Get User Categories</div>
 	</div>
+	<div class="col-xs-3">
+		<div class='btn btn-primary' onClick='getUserStatuses()'>Get User Statuses</div>
+	</div>	
 </div>
 <p class="text-xl-left">&nbsp;</p>
 <div class="wrapper col-xs-12">
 	<div class="form-group">
+	<div class="col-xs-3">
+		<div class='btn btn-primary' onClick='getChats()'>Get Chats by date</div>
+	</div>
 	<div class="col-xs-3">
 		<div class='btn btn-info' onClick='loadData()'>Load chats by date</div>
 	</div>
@@ -52,6 +58,7 @@
 	</div>
 </div>
 <p class="text-x1-left">&nbsp;</p>
+<!--<div class='btn btn-info' onClick='updateTable()'>Update SQL Table</div>-->
 <div class="wrapper col-xs-12">
 	<p id="error"></p>
 	<p id="message1"></p>

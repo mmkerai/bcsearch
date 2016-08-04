@@ -40,8 +40,11 @@ var MYSQLIP;
 var	Departments;	// array of dept ids and dept name objects
 var	Operators;		// array of operator ids and name objectsvar
 var Folders;		// folder id and names object
+var UserCategories;
+var UserStatuses;
 var ApiDataNotReady;	// Flag to show when all Api data has been downloaded so that chat data download can begin
 var TimeNow;
+var EndOfDay;
 var LastTime;
 var ChatConnector;
 var CHATDB = "CHATS";
@@ -52,6 +55,8 @@ var ChatData = function(chatid) {
 		this.ChatId = Big(chatid);	// Big is necessary as normal javascript Integer only goes up to 16 digits
 		this.DepartmentId = 0;
 		this.OperatorId = 0;	// operator id of this chat
+		this.UserCategoryId = 0;	// category id of this chat
+		this.UserStatusId = 0;	// status id of this chat
 		this.Started = 0;		// times ISO times must be converted to epoch (milliseconds since 1 Jan 1970)
 		this.Answered = 0;			// so it is easy to do the calculations
 		this.Ended = 0;
@@ -167,15 +172,16 @@ function saveChatToDB(data) {
 	if(data === null || typeof data === 'undefined')
 		return;
 	
-	if(data.Answered === null || data.Answered === "")
+	if(data.OperatorID === null || data.OperatorID === "")
 		return;				// not interested if chat wasnt answered
-//	console.log("JS Number: "+Number(data.ChatID));
-//	console.log("Big Number: "+Big(data.ChatID));
 	var chat = new ChatData(data.ChatID);
-	if(data.OperatorID)
-		chat.OperatorId = data.OperatorID.substring(0,20);
+	chat.OperatorId = data.OperatorID.substring(0,20);
 	if(data.DepartmentID)
 		chat.DepartmentId = data.DepartmentID.substring(0,20);
+	if(data.UserCategoryID)
+		chat.UserCategoryId = data.UserCategoryID.substring(0,20);
+	if(data.UserStatusID)
+		chat.UserStatusId = data.UserStatusID.substring(0,20);
 	if(data.ChatUrl)
 		chat.ChatUrl = data.ChatUrl.substring(0,256);
 	if(data.ChatName)
@@ -320,6 +326,22 @@ function foldersCallback(dlist) {
 	console.log("No of Folders: "+Object.keys(Folders).length);
 }
 
+function userCategoriesCallback(dlist) {
+	for(var i in dlist) 
+	{
+		UserCategories[dlist[i].SetupItemID] = dlist[i].Name;
+	}
+	console.log("No of User Categories: "+Object.keys(UserCategories).length);
+}
+
+function userStatusesCallback(dlist) {
+	for(var i in dlist) 
+	{
+		UserStatuses[dlist[i].SetupItemID] = dlist[i].Name;
+	}
+	console.log("No of User Statuses: "+Object.keys(UserStatuses).length);
+}
+
 function operatorsCallback(dlist) {
 	for(var i in dlist) 
 	{
@@ -327,6 +349,11 @@ function operatorsCallback(dlist) {
 	}
 	console.log("No of Operators: "+Object.keys(Operators).length);
 }
+
+function updateTableCallback(res, sock) {
+	debugLog("SQL Query Result",res);
+}
+
 /* No longer used. Using mysql pools instead.
 function getDBConnector() {
 	var con = new mysql.createConnection({
@@ -344,7 +371,7 @@ function inactiveChatsCallback(dlist) {
 	for(var i in dlist) 
 	{
 		saveChatToDB(dlist[i]);		// save to DB
-		sleep(50);	// a breather in case there are lots
+		sleep(100);	// a breather in case there are lots
 	}
 }
 
@@ -385,25 +412,6 @@ function getTranscriptViaAPI(chatid,socket) {
 	getApiData("getChatMessages",parameters,chatTranscriptCallback,socket);
 }
 
-function initialiseGlobals() {
-	Departments = new Object();	// array of dept ids and dept name objects
-	Operators = new Object();	// array of operator ids and name objects
-	Folders = new Object();		// array of folder ids objects
-	ApiDataNotReady = 0;
-	TimeNow = new Date();
-}
-
-function doStartOfDay() {
-	initialiseGlobals();
-	getApiData("getDepartments", 0, deptsCallback);
-	sleep(100);
-	getApiData("getFolders", "FolderType=5", foldersCallback);	// chat folders only
-	sleep(100);
-	getApiData("getOperators", 0, operatorsCallback);
-	sleep(100);
-	LastTime = new Date().toISOString();
-}
-
 function buildSearchQuery(sobj,thisSocket) {
 	var searchp = new Array();
 	var sq = "SELECT * FROM "+CHATDB+" WHERE ";
@@ -429,9 +437,13 @@ function buildSearchQuery(sobj,thisSocket) {
 	if(typeof sobj.VisitPhone !== 'undefined' && sobj.VisitPhone !== null && sobj.VisitPhone !== "")
 		searchp.push("VisitPhone LIKE '%"+sobj.VisitPhone+"%'");
 	if(typeof sobj.DepartmentId !== 'undefined' && sobj.DepartmentId !== null && sobj.DepartmentId!== "")
-		searchp.push("DepartmentID = '"+sobj.DepartmentId+"'");
+		searchp.push("DepartmentId = '"+sobj.DepartmentId+"'");
 	if(typeof sobj.OperatorId !== 'undefined' && sobj.OperatorId !== null && sobj.OperatorId !== "")
-		searchp.push("OperatorID = '"+sobj.OperatorId+"'");
+		searchp.push("OperatorId = '"+sobj.OperatorId+"'");
+	if(typeof sobj.UserCategoryId !== 'undefined' && sobj.UserCategoryId !== null && sobj.UserCategoryId !== "")
+		searchp.push("UserCategoryId = '"+sobj.UserCategoryId+"'");
+	if(typeof sobj.UserStatusId !== 'undefined' && sobj.UserStatusId !== null && sobj.UserStatusId !== "")
+		searchp.push("UserStatusId = '"+sobj.UserStatusId+"'");
 	
 	if(searchp.length == 0)		// no query parameters
 	{
@@ -457,6 +469,21 @@ io.sockets.on('connection', function(socket){
 	{
 		socket.emit('getOperatorsResponse',Operators);
 	});
+	socket.on('getUserCategories', function(data)
+	{
+		socket.emit('getUserCategoriesResponse',UserCategories);
+	});
+	socket.on('getUserStatuses', function(data)
+	{
+		socket.emit('getUserStatusesResponse',UserStatuses);
+	});
+/*	socket.on('updateSQLTable', function(data)
+	{
+		var qstr = "ALTER TABLE "+CHATDB+" ADD UserCategoryId VARCHAR(20)";
+		doMysqlQuery(qstr, updateTableCallback,socket);
+		qstr = "ALTER TABLE "+CHATDB+" ADD UserStatusId VARCHAR(20)";
+		doMysqlQuery(qstr, updateTableCallback,socket);
+	}); */
 	socket.on('getChats', function(data)
 	{
 		var fromd = convertDate(data.FromDate,socket);
@@ -516,7 +543,6 @@ function doMysqlQuery(query, sqlCallback, tsocket) {
 				tsocket.emit("errorResponse", "Request error: "+err.code);
 			}
 			
-//			console.log("SQL returned now: ");
 			sqlCallback(results, tsocket);
 		});
 		
@@ -555,6 +581,33 @@ function convertDate(datetime,thisSocket) {
 	return(dt);
 }
 
+function initialiseGlobals() {
+	Departments = new Object();	// array of dept ids and dept name objects
+	Operators = new Object();	// array of operator ids and name objects
+	Folders = new Object();		// array of folder ids objects
+	UserCategories = new Object();
+	UserStatuses = new Object();
+	ApiDataNotReady = 0;
+	TimeNow = new Date();
+	EndOfDay = new Date();
+	EndOfDay.setHours(23,59,59,999);	// last milli second of the day
+}
+
+function doStartOfDay() {
+	initialiseGlobals();
+	getApiData("getDepartments", 0, deptsCallback);
+	sleep(200);
+	getApiData("getFolders", "FolderType=5", foldersCallback);	// chat folders only
+	sleep(200);
+	getApiData("getOperators", 0, operatorsCallback);
+	sleep(200);
+	getApiData("getSetupItems", "FolderType=20", userCategoriesCallback);
+	sleep(200);
+	getApiData("getSetupItems", "FolderType=21", userStatusesCallback);
+	sleep(200);
+	LastTime = new Date().toISOString();
+}
+
 function downloadRecentChats() {
 	TimeNow = new Date().toISOString();
 	console.log(TimeNow+": Getting latest chats for DB");
@@ -562,7 +615,16 @@ function downloadRecentChats() {
 	LastTime = TimeNow;
 }
 
+function checkEndOfDay() {
+	var ctime = new Date();
+	if(ctime > EndOfDay)		// we have skipped to a new day
+	{
+		console.log(ctime.toISOString()+": New day started, reload static data");
+		doStartOfDay();
+	}
+}
+
 console.log("Server Started on port "+PORT);
 doStartOfDay();
 setInterval(downloadRecentChats, 600000);		// downloads latest chats every 10 mins
-
+setInterval(checkEndOfDay, 60000);			// check if new day every minute

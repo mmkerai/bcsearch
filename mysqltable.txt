@@ -10,6 +10,8 @@ CREATE TABLE CHATS (
   Ended DATETIME DEFAULT NULL,
   OperatorId varchar(20),
   DepartmentId varchar(20),
+  UserCategoryId varchar(20),
+  UserStatusId varchar(20),
   PRIMARY KEY (ChatId)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 

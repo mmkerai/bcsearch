@@ -7,121 +7,33 @@
   <script type="text/javascript" src="jquery-ui-1.12.0/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="jquery-ui-1.12.0/jquery-ui.css">
   
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.1/chosen.css">
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.1/chosen.jquery.min.js"></script>
-  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.1/chosen.jquery.min.js"></script>  
   
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.jqueryui.min.js"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.jqueryui.min.css">
   
-  <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+  <!-- <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
   
-  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.jqueryui.min.css">
-  
-  
-  
-  
-  
+  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.jqueryui.min.css"> -->
   
   <script src="/socket.io/socket.io.js"></script>
-  <style>
-    
-    body {
-    background-color: #1F3B8F;
-    }
-    
-    label {
-    font-family: sans-serif;
-    color:white;
-    }
-     
-    #sidesearch {
-      position: fixed;
-      top: 4em;
-      margin: 0.5em;
-      padding-right: 0.5em;
-      width: 13em;
-      height: calc(100% - 8em);
-    }
-    
-    #resultstable,
-    #transcripttable {
-      position: fixed;
-      border-color: grey;
-      border-style: double;
-      top: 4em;
-      margin: 0.5em;
-      left: 14em;
-      width: calc(100% - 15.5em);
-      height: calc(100% - 8em);
-      overflow: auto;
-    }
-    
-    #error {
-      position: fixed;
-      bottom: 0;
-      width: calc(100% - 2em);
-      margin: 0.5em;
-      border-color: red;
-      border-style: solid;
-      height: 2em;
-    }
-    
-    #OperatorName,
-    #DepartmentName {
-      max-width: 12.5em;
-    }
-    
-    table.dataTable tbody th,
-    table.dataTable tbody td {
-      padding: 0.3em;
-    }
-    
-    input {
-      width: 100%;
-    }
-    
-    #GoBack{
-    left: 1.4em;
-    position: absolute;
-    top: 0.7em;
-    }
-    
-    #Prev{
-    right: 22em;
-    position: absolute;
-    top: 0.7em;
-    }
-    
-    #Next{
-    right: 14em;
-    position: absolute;
-    top: 0.7em;
-    }
-    
-    #BreadCrumb{
-    background-color: yellowgreen;
-    font-family: sans-serif;
-    font-size: 1.1em;
-    left: 13em;
-    position: absolute;
-    top: 1.2em;
-    }
-    
-    
-    
-    
-  </style>
+  
+  <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  
+  <script src="index.js"></script>
+  <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
-  <h2><center><img title="eurobet" alt="logo" src="http://img.eurobet.it/adynit/images/_newsite-14/images/logo.png"></center></h2>
+  <div id="header"><img title="eurobet" alt="logo" src="http://img.eurobet.it/adynit/images/_newsite-14/images/logo.png"></div>
   <div id="sidesearch">
-    <form name="search" action="javascript:void(0);" onsubmit="searchChats(this)"> <label for="ChatId">ChatId:</label><br> <input type="text" name="ChatId" id="ChatId"><br> <label for="VisitName">Nome Cliente</label><br> <input type="text" name="VisitName" id="VisitName"><br> <label for="VisitRef">Account Cliente</label><br> <input type="text" name="VisitRef" id="VisitRef"><br> <label for="Visitinfo">Info Cliente</label><br> <input type="text" name="VisitInfo" id="VisitInfo"><br> <label for="VisitPhone">Tel. Cliente</label><br> <input type="text" name="VisitPhone" id="VisitPhone"><br> <label for="OperatorId">Operatore:</label><br> <select name="OperatorId" id="OperatorId" data-placeholder="Nessun Filtro">
+    <form name="search" action="javascript:void(0);" onsubmit="searchChats(this)"><label for="ChatId">ChatId:</label><br> <input type="text" name="ChatId" id="ChatId"><br> <label for="VisitName">Nome Cliente</label><br> <input type="text" name="VisitName" id="VisitName"><br> <label for="Visitinfo">Account Cliente</label><br> <input type="text" name="VisitInfo" id="VisitInfo"><br><label for="VisitRef">Info Cliente</label><br> <input type="text" name="VisitRef" id="VisitRef"><br><label for="VisitPhone">Tel. Cliente</label><br><input type="text" name="VisitPhone" id="VisitPhone"><br><label for="FromDate">Da:</label><br> <input type="text" id="FromDate" name="FromDate"><br><label for="ToDate">A:</label><br> <input type="text" id="ToDate" name="ToDate"><br> <label for="OperatorId">Operatore:</label><br><select name="OperatorId" id="OperatorId" data-placeholder="Nessun Filtro">
     </select><br> <label for="DepartmentId">Dipartimento:</label><br> <select name="DepartmentId" id="DepartmentId" data-placeholder="Nessun Filtro">
-    </select><br> <label for="FromDate">Da:</label><br> <input type="text" id="FromDate" name="FromDate"><br> <label for="ToDate">A:</label><br> <input type="text" id="ToDate" name="ToDate"><br><br> <button class="ui-button ui-corner-all ui-widget" type="submit" value="Submit">Invia</button> <button class="ui-button ui-corner-all ui-widget" type="reset" value="Reset">Reset</button> </form>
+    </select><label for="UserCategoryId">Categoria:</label><br><select name="UserCategoryId" id="UserCategoryId" data-placeholder="Nessun Filtro">
+    </select><br> <label for="UserStatusId">Stato:</label><br> <select name="UserStatusId" id="UserStatusId" data-placeholder="Nessun Filtro">
+    </select><br> <br><br> <button class="ui-button ui-corner-all ui-widget" type="submit" value="Submit">Invia</button> <button class="ui-button ui-corner-all ui-widget" type="reset" value="Reset">Reset</button> </form>
   </div>
   <div id="resultstable">
     <table id="chats" class="display" cellspacing="0" width="100%">
@@ -137,6 +49,8 @@
           <th>Finita</th>
           <th>Agente</th>
           <th>Dipartimento</th>
+          <th>Cat.</th>
+          <th>Stato</th>
           <th>URL</th>
         </tr>
       </thead>
@@ -159,312 +73,8 @@
   <button class="ui-button ui-corner-all ui-widget" id="Next" style="display:none;" >Successiva</button> 
   <div id="BreadCrumb" style="display:none;"></div>  
   
-  <div id="error"></div>
+  <div id="error"></div> 
   
-  <script>
-
-    var socket = io();
-
-    function getDepartments() {
-      socket.emit('getDepartments', 0);
-    }
-
-    function getOperators() {
-      socket.emit('getOperators', 0);
-    }
-
-
-    function searchChats(aform) {
-      console.log("searching chats");
-      FV = {};
-      for (var i = 1; i < aform.length - 2; i++) { //exclude 2 buttons
-        if (aform.elements[i].value !== "") {
-          if (aform.elements[i].name == "FromDate") {
-            var f = (aform.elements[i].value).split("/");
-            FV[aform.elements[i].name] = new Date(f[2], f[1] - 1, f[0], 0, 0, 0, 0).toISOString();
-          } else if (aform.elements[i].name == "ToDate") {
-            var f = (aform.elements[i].value).split("/");
-            FV[aform.elements[i].name] = new Date(f[2], f[1] - 1, f[0], 23, 59, 59, 0).toISOString();
-          } else {
-            FV[aform.elements[i].name] = aform.elements[i].value;
-          }
-        }
-      }
-      
-      /*
-      for (var key in FV) {
-        if (FV.hasOwnProperty(key)) {
-          console.log(key + " -> " + FV[key]);
-        }
-      }*/
-      socket.emit('searchChats', FV);
-    }
-
-    function getTranscript(id) {
-      socket.emit('getTranscript', id);     
-      
-    }
-    //utility  
-    function getURLParameter(name) {
-      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null
-    }
-    /* DatePicker */
-    /* Italian initialisation for the jQuery UI date picker plugin. */
-    /* Written by Antonello Pasella (antonello.pasella@gmail.com). */
-    (function(factory) {
-      factory(jQuery.datepicker);
-    }(function(datepicker) {
-      datepicker.regional.it = {
-        closeText: "Chiudi",
-        prevText: "&#x3C;Prec",
-        nextText: "Succ&#x3E;",
-        currentText: "Oggi",
-        monthNames: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
-        monthNamesShort: ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"],
-        dayNames: ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"],
-        dayNamesShort: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
-        dayNamesMin: ["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"],
-        weekHeader: "Sm",
-        dateFormat: "dd/mm/yy",
-        firstDay: 1,
-        isRTL: false,
-        showMonthAfterYear: false,
-        yearSuffix: ""
-      };
-      datepicker.setDefaults(datepicker.regional.it);
-      return datepicker.regional.it;
-    }));
-    var from = $("#FromDate").datepicker({
-        defaultDate: "+1w",
-        changeMonth: true,
-        numberOfMonths: 1
-      }).on("change", function() {
-        to.datepicker("option", "minDate", getDate(this));
-      }),
-      to = $("#ToDate").datepicker({
-        defaultDate: "+1w",
-        changeMonth: true,
-        numberOfMonths: 1
-      }).on("change", function() {
-        from.datepicker("option", "maxDate", getDate(this));
-      });
-
-    function getDate(element) {
-      var date;
-      try {
-        date = $.datepicker.parseDate(dateFormat, element.value);
-      } catch (e) {
-        date = null;
-      }
-      return date;
-    }
-    ///////////////DOCUMENT READY
-    $(function() {
-      //load them straightaway
-      getDepartments();
-      getOperators();     
-      
-      //Style input boxes
-      $('input').addClass("ui-widget ui-widget-content ui-corner-all");
-      
-      
-      //initialize chats table
-      $('#chats').DataTable({
-        "paging": false,
-        "scrollX": false,
-        "scrollY": "100%",
-        "scrollCollapse": true,
-        "fixedHeader": true,
-        "columns": [{
-          "data": "ChatId",
-          "defaultContent": "---"
-        }, {
-          "data": "VisitName",
-          "defaultContent": "---"
-        }, {
-          "data": "VisitRef",
-          "defaultContent": "---"
-        }, {
-          "data": "VisitInfo",
-          "defaultContent": "---"
-        }, {
-          "data": "VisitPhone",
-          "defaultContent": "---"
-        }, {
-          "data": "Started",
-          "defaultContent": "---"
-        }, {
-          "data": "Answered",
-          "defaultContent": "---"
-        }, {
-          "data": "Ended",
-          "defaultContent": "---"
-        }, {
-          "data": "OperatorId",
-          "defaultContent": "---"
-        }, {
-          "data": "DepartmentId",
-          "defaultContent": "---"
-        }, {
-          "data": "ChatUrl",
-          "defaultContent": "---"
-        }]
-      });
-      //initialize transcript table
-      $('#transcript').DataTable({
-          "paging": false,
-        "scrollX": false,
-        "scrollY": "100%",
-        "scrollCollapse": true,
-        "fixedHeader": true,
-        "columns": [{
-          "data": "Created",
-          "defaultContent": "---"
-        }, {
-          "data": "Name",
-          "defaultContent": "---"
-        }, {
-          "data": "Text",
-          "defaultContent": "---"
-        }]
-      });
-      
-      
-      //add navigation buttons
-      $("#transcript_wrapper").append($("#GoBack"));
-      $("#transcript_wrapper").append($("#Prev"));
-      $("#transcript_wrapper").append($("#Next"));
-      $("#transcript_wrapper").append($("#BreadCrumb"));     
-      
-      
-      socket.on('errorResponse', function(data) {
-        $("#error").text(data);
-      });
-      
-      socket.on('getDepartmentsResponse', function(data) {
-        //Save it globaly first
-        window.global_Departments = data;
-        var output = ['<option value="" selected></option>'];
-        for (var i in data) {
-          output.push('<option value="' + i + '">' + data[i] + '</option>');
-          //console.log("Department id: " + i + " Name: " + data[i]);
-        }
-        $('#DepartmentId').html(output.join(''));
-        $("#DepartmentId").chosen({
-          allow_single_deselect: true,
-          width: '100%'
-        });
-        //$("#message1").html("No of Departments: " + Object.keys(data).length);
-      });
-      socket.on('getOperatorsResponse', function(data) {
-        //Save it globally first
-        window.global_Operators = data;
-        var output = ['<option value="" selected></option>'];
-        for (var i in data) {
-          output.push('<option value="' + i + '">' + data[i] + '</option>');
-          //console.log("Operator id: " + i + " Name: " + data[i]);
-        }
-        $('#OperatorId').html(output.join(''));
-        $("#OperatorId").chosen({
-          allow_single_deselect: true,
-          width: '100%'
-        });
-        //$("#message2").text("No of Operators: " + Object.keys(data).length);
-      });
-      socket.on('searchChatsResponse', function(Chats) {
-        console.log("finished searching chats");
-        
-        //properly initialize the global array
-        window.GlobalChatIds=[];
-        window.GlobalChatIds.length=0;
-        
-        //pre=parse the table
-        for (i = 0; i < Chats.length; i++) {
-          
-          //keep array of chat Ids in global array
-          window.GlobalChatIds[i] = Chats[i].ChatId+""; 
-          console.log(i+":  "+window.GlobalChatIds[i]);           
-          
-          Chats[i].ChatId = "<a href='#' onclick='getTranscript(\"" + Chats[i].ChatId + "\");'>" + Chats[i].ChatId + "</a>";
-          Chats[i].Started = moment(Chats[i].Started).format("DD-MM-YY HH:mm");
-          Chats[i].Answered = moment(Chats[i].Answered).format("DD-MM-YY HH:mm");
-          Chats[i].Ended = moment(Chats[i].Ended).format("DD-MM-YY HH:mm");
-          Chats[i].OperatorId = window.global_Operators[Chats[i].OperatorId];
-          Chats[i].DepartmentId = window.global_Departments[Chats[i].DepartmentId];
-        }
-        var datatable = $('#chats').dataTable().api(); //get reference
-        datatable.clear();
-        datatable.rows.add(Chats);
-        datatable.draw();
-        /*
-		for(var i in Chats)
-		{
-			var dataobj = Chats[i];
-			for(var key in dataobj)
-			{
-				if(dataobj.hasOwnProperty(key))
-					console.log(key +":"+dataobj[key]);
-			}
-		}*/
-      });
-      socket.on('getTranscriptResponse', function(transcript) {
-        console.log("finished retrieving transcript");
-        //pre=parse the table
-        
-        var chatindex;
-        var numberchats = window.GlobalChatIds.length;
-                
-        for (i = 0; i < numberchats; i++) {
-            if (transcript.ChatId == window.GlobalChatIds[i]){
-            chatindex=i;
-            break;
-            }
-        }
-        //console.log(chatindex+" / "+numberchats);
-        $("#BreadCrumb").show();
-        $("#BreadCrumb").text(
-        "Chat ID: "+transcript.ChatId + "     "+
-        "Chat "+ (chatindex+1) + " di " + (numberchats)        
-        );
-        
-        for (i = 0; i < transcript.Transcript.length; i++) {
-          transcript.Transcript[i].Created = moment(transcript.Transcript[i].Created).format("DD-MM-YY HH:mm:ss");
-        }
-        var datatable = $('#transcript').dataTable().api(); //get reference
-        $("#resultstable").hide();
-        $("#transcripttable").show();
-        
-        datatable.clear();
-        datatable.rows.add(transcript.Transcript);
-        datatable.draw();
-        
-        
-        $("#GoBack").show();
-        $("#GoBack").click(function(){        
-            $("#GoBack").hide();
-            $("#resultstable").show();
-            $("#transcripttable").hide();           
-        });
-        
-        
-        if (chatindex>0){
-        $("#Prev").show();
-        $("#Prev").off(); //remove events
-        $("#Prev").click(function(){
-              getTranscript(window.GlobalChatIds[chatindex-1]); 
-        });
-        }else {$("#Prev").hide();}  
-        
-        if (chatindex<numberchats-1){
-        $("#Next").show();
-        $("#Next").off(); //remove events
-        $("#Next").click(function(){ 
-              getTranscript(window.GlobalChatIds[chatindex+1]);     
-        }); 
-        }else { $("#Next").hide();}            
-      });
-    });
-  </script>
 </body>
 
 </html>

@@ -14,9 +14,9 @@
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.jqueryui.min.js"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.jqueryui.min.css">
   
-  <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+  <!-- <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
   
-  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.jqueryui.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.jqueryui.min.css"> -->
   
   <script src="/socket.io/socket.io.js"></script>
   
@@ -27,10 +27,12 @@
 </head>
 
 <body>
-  <h2><center><img title="eurobet" alt="logo" src="http://img.eurobet.it/adynit/images/_newsite-14/images/logo.png"></center></h2>
+  <div id="header"><img title="eurobet" alt="logo" src="http://img.eurobet.it/adynit/images/_newsite-14/images/logo.png"></div>
   <div id="sidesearch">
-    <form name="search" action="javascript:void(0);" onsubmit="searchChats(this)"> <label for="ChatId">ChatId:</label><br> <input type="text" name="ChatId" id="ChatId"><br> <label for="VisitName">Nome Cliente</label><br> <input type="text" name="VisitName" id="VisitName"><br> <label for="VisitRef">Account Cliente</label><br> <input type="text" name="VisitRef" id="VisitRef"><br> <label for="Visitinfo">Info Cliente</label><br> <input type="text" name="VisitInfo" id="VisitInfo"><br> <label for="VisitPhone">Tel. Cliente</label><br><input type="text" name="VisitPhone" id="VisitPhone"><br><label for="FromDate">Da:</label><br> <input type="text" id="FromDate" name="FromDate"><br><label for="ToDate">A:</label><br> <input type="text" id="ToDate" name="ToDate"><br> <label for="OperatorId">Operatore:</label><br> <select name="OperatorId" id="OperatorId" data-placeholder="Nessun Filtro">
+    <form name="search" action="javascript:void(0);" onsubmit="searchChats(this)"><label for="ChatId">ChatId:</label><br> <input type="text" name="ChatId" id="ChatId"><br> <label for="VisitName">Nome Cliente</label><br> <input type="text" name="VisitName" id="VisitName"><br> <label for="Visitinfo">Account Cliente</label><br> <input type="text" name="VisitInfo" id="VisitInfo"><br><label for="VisitRef">Info Cliente</label><br> <input type="text" name="VisitRef" id="VisitRef"><br><label for="VisitPhone">Tel. Cliente</label><br><input type="text" name="VisitPhone" id="VisitPhone"><br><label for="FromDate">Da:</label><br> <input type="text" id="FromDate" name="FromDate"><br><label for="ToDate">A:</label><br> <input type="text" id="ToDate" name="ToDate"><br> <label for="OperatorId">Operatore:</label><br><select name="OperatorId" id="OperatorId" data-placeholder="Nessun Filtro">
     </select><br> <label for="DepartmentId">Dipartimento:</label><br> <select name="DepartmentId" id="DepartmentId" data-placeholder="Nessun Filtro">
+    </select><label for="UserCategoryId">Categoria:</label><br><select name="UserCategoryId" id="UserCategoryId" data-placeholder="Nessun Filtro">
+    </select><br> <label for="UserStatusId">Stato:</label><br> <select name="UserStatusId" id="UserStatusId" data-placeholder="Nessun Filtro">
     </select><br> <br><br> <button class="ui-button ui-corner-all ui-widget" type="submit" value="Submit">Invia</button> <button class="ui-button ui-corner-all ui-widget" type="reset" value="Reset">Reset</button> </form>
   </div>
   <div id="resultstable">
@@ -47,6 +49,8 @@
           <th>Finita</th>
           <th>Agente</th>
           <th>Dipartimento</th>
+          <th>Cat.</th>
+          <th>Stato</th>
           <th>URL</th>
         </tr>
       </thead>

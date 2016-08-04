@@ -8,6 +8,18 @@ function getOperators() {
 	socket.emit('getOperators',0);
 }
 
+function getUserCategories() {
+	socket.emit('getUserCategories',0);
+}
+
+function getUserStatuses() {
+	socket.emit('getUserStatuses',0);
+}
+/*
+function updateTable() {
+	socket.emit('updateSQLTable',0);
+}
+*/
 function getChats() {
 	var fDate = $('#fromDate').val();
 	var tDate = $('#toDate').val();
@@ -78,12 +90,30 @@ $(document).ready(function() {
 		}
 		$("#message2").html(str);
 	});
+	socket.on('getUserCategoriesResponse', function(data){
+		$("#message1").html("<b>No of User Categories: "+Object.keys(data).length+"</b>");
+		var str = "";
+		for(var i in data)
+		{
+			str = str + "User Category id: "+i+", Name: "+data[i]+"<br/>";
+		}
+		$("#message2").html(str);
+	});
+	socket.on('getUserStatusesResponse', function(data){
+		$("#message1").html("<b>No of User Statuses: "+Object.keys(data).length+"</b>");
+		var str = "";
+		for(var i in data)
+		{
+			str = str + "User Status id: "+i+", Name: "+data[i]+"<br/>";
+		}
+		$("#message2").html(str);
+	});
 	socket.on('getChatsResponse', function(results){
 		$("#message1").html("<b>No of Chats: "+results.length+"</b>");
 		var str = "";
 		for(var i in results)
 		{
-			str = "<b>"+i+":</b><br/>";
+			str = str+ "<b>"+i+":</b><br/>";
 			var dataobj = results[i];
 			for(var key in dataobj)
 			{
