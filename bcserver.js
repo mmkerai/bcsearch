@@ -108,7 +108,7 @@ if(MYSQLUSER == 0 || MYSQLPWD == 0 || MYSQLDBNAME == 0 || MYSQLIP == 0)
 	process.exit(1);
 }
 
-console.log("Config loaded successfully");
+console.log("Config loaded successfully, bcserver.js v1.02");
 
 //********************************* Callbacks for all URL requests
 app.get('/', function(req, res){
@@ -154,6 +154,10 @@ app.post('/chat-ended', function(req, res){
 		saveChatToDB(req.body);
 
 	res.send({ "result": "success" });
+});
+
+process.on('uncaughtException', function (err) {
+  console.log('Exception: ' + err);
 });
 
 var pool = mysql.createPool({
@@ -402,7 +406,7 @@ function getChatsViaAPI(from, to) {
 		parameters = "FolderID="+fid+"&FromDate="+from+"&ToDate="+to;
 		console.log("Getting chats for folder: "+Folders[fid]);
 		getApiData("getInactiveChats", parameters, inactiveChatsCallback);
-		sleep(100);
+		sleep(200);
 	}
 }
 
@@ -595,6 +599,11 @@ function initialiseGlobals() {
 
 function doStartOfDay() {
 	initialiseGlobals();
+	getStaticData();
+	LastTime = new Date().toISOString();
+}
+
+function getStaticData() {
 	getApiData("getDepartments", 0, deptsCallback);
 	sleep(200);
 	getApiData("getFolders", "FolderType=5", foldersCallback);	// chat folders only
@@ -604,13 +613,12 @@ function doStartOfDay() {
 	getApiData("getSetupItems", "FolderType=20", userCategoriesCallback);
 	sleep(200);
 	getApiData("getSetupItems", "FolderType=21", userStatusesCallback);
-	sleep(200);
-	LastTime = new Date().toISOString();
 }
 
 function downloadRecentChats() {
 	TimeNow = new Date().toISOString();
 	console.log(TimeNow+": Getting latest chats for DB");
+	getStaticData();
 	getChatsViaAPI(LastTime,TimeNow);
 	LastTime = TimeNow;
 }
