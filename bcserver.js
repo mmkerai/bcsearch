@@ -1,4 +1,5 @@
-// Boldchat test script for Nodejs
+// Boldchat server side code for Nodejs
+console.log("bcserver.js v1.03 (30th August 2013)");
 //******** Set up Express Server and socket.io
 var http = require('http');
 var https = require('https');
@@ -24,7 +25,7 @@ server = https.createServer(options, app).listen(443);
 var PORT = Number(8080);
 var server = http.createServer(app).listen(PORT);
 var	io = require('socket.io').listen(server);
-	
+
 //*********** Global variables
 var EnVars;
 var AID;
@@ -109,7 +110,7 @@ if(MYSQLUSER == 0 || MYSQLPWD == 0 || MYSQLDBNAME == 0 || MYSQLIP == 0)
 	process.exit(1);
 }
 
-console.log("Config loaded successfully, bcserver.js v1.02");
+console.log("Config loaded successfully");
 
 //********************************* Callbacks for all URL requests
 app.get('/', function(req, res){
